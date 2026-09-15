@@ -6,6 +6,9 @@ ctrl<
         brownie.png
         cheesecake.png
         chocotorta.png
+        ctrl-icon.png
+        ctrl.jpg
+        ctrl.png
         icon.svg
         lemonpie.png
         maicena.png
@@ -20,6 +23,8 @@ ctrl<
     js<
         app.js
         sw.js
+    .gitingore
+    .nojekyll
     index.html
     manifest.webmanifest.json
     README.md

@@ -1,0 +1,13 @@
+{
+  "name": "Control de Consignaciones",
+  "short_name": "Consignaciones",
+  "description": "Registro de productos, entregas, ventas y cobros en consignación.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f6f9",
+  "theme_color": "#1746a2",
+  "icons": [
+    { "src": "images/ctrl-icon.png", "sizes": "500x500", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

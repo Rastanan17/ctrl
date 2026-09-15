@@ -1,0 +1,26 @@
+ctrl<
+    css<
+        styles.css
+    images<
+        bizcochitos.png
+        brownie.png
+        cheesecake.png
+        chocotorta.png
+        icon.svg
+        lemonpie.png
+        maicena.png
+        oreo.png
+        pepas.png
+        pepitos.png
+        pochoclochoco.png
+        pochoclofrutilla.png
+        pochoclolimon.png
+        pochoclovainilla.png
+        tiramisu.png
+    js<
+        app.js
+        sw.js
+    index.html
+    manifest.webmanifest.json
+    README.md
+    roots.text - (Éste archivo)

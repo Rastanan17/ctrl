@@ -425,11 +425,52 @@
     if (justCreated) setTimeout(() => toast('Entrega guardada. Ya podés enviar el duplicado.'), 150);
   }
 
-  function whatsappText(delivery) {
-    const client = clientById(delivery.clientId);
+function whatsappText(delivery) {
+  const client = clientById(delivery.clientId);
+  const paid = paidTotal(delivery);
+  const tracked = paid > 0 || delivery.items.some(item => (item.sold || 0) > 0 || (item.returned || 0) > 0);
+
+  if (!tracked) {
     const lines = delivery.items.map(item => `• ${item.quantity} x ${item.name} (${item.presentation}) [${item.brand || 'Tomá Mate'}] — ${money(item.quantity * item.price)}`);
     return [`*CONTROL DE CONSIGNACIONES*`, `*COMPROBANTE DE ENTREGA*`, ``, `Cliente: ${client?.name || ''}`, `Fecha: ${dateTime(delivery.date)}`, `Comisión acordada: ${commissionRate(delivery)}%`, ``, ...lines, ``, `*TOTAL EXHIBIDO: ${money(deliveryTotal(delivery))}*`, delivery.notes ? `Observaciones: ${delivery.notes}` : '', ``, `Este mensaje funciona como duplicado de la mercadería entregada en consignación.`].filter(line => line !== '').join('\n');
   }
+
+  const lines = delivery.items.flatMap(item => {
+    const sold = Number(item.sold) || 0;
+    const returned = Number(item.returned) || 0;
+    const pending = Math.max(0, item.quantity - sold - returned);
+    return [
+      `• *${item.name}* (${item.presentation}) [${item.brand || 'Tomá Mate'}]`,
+      `  Entregado: ${item.quantity} · Vendido: ${sold} (${money(sold * item.price)}) · Devuelto: ${returned} · Pendiente: ${pending}`
+    ];
+  });
+
+  const gross = soldTotal(delivery);
+  const commission = commissionTotal(delivery);
+  const net = netSoldTotal(delivery);
+  const due = Math.max(0, net - paid);
+
+  return [
+    `*CONTROL DE CONSIGNACIONES*`,
+    `*SEGUIMIENTO ACTUALIZADO*`,
+    ``,
+    `Cliente: ${client?.name || ''}`,
+    `Entrega: ${dateTime(delivery.date)}`,
+    `Actualizado: ${dateTime(new Date())}`,
+    `Estado: ${statusOf(delivery)}`,
+    ``,
+    ...lines,
+    ``,
+    `Venta bruta: ${money(gross)}`,
+    `Comisión (${commissionRate(delivery)}%): -${money(commission)}`,
+    `Neto a rendir: ${money(net)}`,
+    `Pagado: ${money(paid)}`,
+    `*SALDO PENDIENTE: ${money(due)}*`,
+    ``,
+    pendingUnits(delivery) > 0 ? `Mercadería que continúa en el negocio: ${pendingUnits(delivery)} unidad${pendingUnits(delivery) === 1 ? '' : 'es'}.` : `No queda mercadería pendiente en el negocio.`,
+    `Este mensaje funciona como actualización del comprobante de consignación.`
+  ].join('\n');
+}
 
   function sendWhatsApp(id) {
     const delivery = state.deliveries.find(item => item.id === id); const client = clientById(delivery?.clientId);

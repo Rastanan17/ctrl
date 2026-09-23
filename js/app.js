@@ -28,23 +28,23 @@
   const defaults = {
     clients: [],
     products: [
-      { id: uid(), name: 'Bizcochitos de Grasa', presentation: '200 g', price: 3000, cost: 1000, brand: 'Tomá Mate', image: 'images/bizcochitos.png' },
-      { id: uid(), name: 'Pepitos con Chips', presentation: '12 unidades', price: 4000, cost: 1400, brand: 'Tomá Mate', image: 'images/pepitos.png' },
-      { id: uid(), name: 'Alfajorcitos de Maicena', presentation: '12 unidades', price: 4000, cost: 1400, brand: 'Tomá Mate', image: 'images/maicena.png' },
-      { id: uid(), name: 'Pepas con Membrillo', presentation: '12 unidades', price: 4000, cost: 1400, brand: 'Tomá Mate', image: 'images/pepas.png' },
-      { id: uid(), name: 'Pochoclos Chocolate', presentation: '1 paquete', price: 1000, cost: 400, brand: 'Tomá Mate', image: 'images/pochoclochoco.png' },
-      { id: uid(), name: 'Pochoclos Frutilla', presentation: '1 paquete', price: 1000, cost: 400, brand: 'Tomá Mate', image: 'images/pochoclofrutilla.png' },
-      { id: uid(), name: 'Pochoclos Limón', presentation: '1 paquete', price: 1000, cost: 400, brand: 'Tomá Mate', image: 'images/pochocloslimon.png' },
-      { id: uid(), name: 'Pochoclos Vainilla', presentation: '1 paquete', price: 1000, cost: 400, brand: 'Tomá Mate', image: 'images/pochoclosvainilla.png' },
-      { id: uid(), name: 'Cheese Cake Petit', presentation: '100ml', price: 3500, cost: 1200, brand: 'Dulce Toque', image: 'images/cheesecake.png' },
-      { id: uid(), name: 'Cheese Cake Glotón', presentation: '250ml', price: 6000, cost: 2200, brand: 'Dulce Toque', image: 'images/cheesecake.png' },
-      { id: uid(), name: 'Cheese Cake Goloso', presentation: '350ml', price: 7500, cost: 2600, brand: 'Dulce Toque', image: 'images/cheesecake.png' },
+      { id: uid(), name: 'Alfajorcitos de Maicena', presentation: '250 gr', price: 4000, cost: 1400, brand: 'Tomá Mate', image: 'images/maicena.png' },
+      { id: uid(), name: 'Bizcochitos de Grasa', presentation: '200 gr', price: 3000, cost: 1000, brand: 'Tomá Mate', image: 'images/bizcochitos.png' },
+      { id: uid(), name: 'Pepas con Membrillo', presentation: '150 gr', price: 4000, cost: 1400, brand: 'Tomá Mate', image: 'images/pepas.png' },
+      { id: uid(), name: 'Pepitos con Chips', presentation: '150 gr', price: 4000, cost: 1400, brand: 'Tomá Mate', image: 'images/pepitos.png' },
+      { id: uid(), name: 'Pochoclos Chocolate', presentation: '1 paquete', price: 1300, cost: 500, brand: 'Tomá Mate', image: 'images/pochoclochoco.png' },
+      { id: uid(), name: 'Pochoclos Frutilla', presentation: '1 paquete', price: 1300, cost: 500, brand: 'Tomá Mate', image: 'images/pochoclofrutilla.png' },
+      { id: uid(), name: 'Pochoclos Limón', presentation: '1 paquete', price: 1300, cost: 500, brand: 'Tomá Mate', image: 'images/pochocloslimon.png' },
+      { id: uid(), name: 'Pochoclos Vainilla', presentation: '1 paquete', price: 1300, cost: 500, brand: 'Tomá Mate', image: 'images/pochoclosvainilla.png' },
+      { id: uid(), name: 'CheeseCake Petit', presentation: '100ml', price: 3500, cost: 1200, brand: 'Dulce Toque', image: 'images/cheesecake.png' },
+      { id: uid(), name: 'CheeseCake Glotón', presentation: '250ml', price: 6000, cost: 2200, brand: 'Dulce Toque', image: 'images/cheesecake.png' },
+      { id: uid(), name: 'CheeseCake Goloso', presentation: '350ml', price: 7500, cost: 2600, brand: 'Dulce Toque', image: 'images/cheesecake.png' },
+      { id: uid(), name: 'ChocoTorta Petit', presentation: '100ml', price: 3500, cost: 1200, brand: 'Dulce Toque', image: 'images/chocotorta.png' },
+      { id: uid(), name: 'ChocoTorta Glotón', presentation: '250ml', price: 7500, cost: 2500, brand: 'Dulce Toque', image: 'images/chocotorta.png' },
+      { id: uid(), name: 'ChocoTorta Goloso', presentation: '350ml', price: 9500, cost: 3300, brand: 'Dulce Toque', image: 'images/chocotorta.png' },
       { id: uid(), name: 'Oreo Petit', presentation: '100ml', price: 3500, cost: 1200, brand: 'Dulce Toque', image: 'images/oreo.png' },
       { id: uid(), name: 'Oreo Glotón', presentation: '250ml', price: 6000, cost: 2200, brand: 'Dulce Toque', image: 'images/oreo.png' },
-      { id: uid(), name: 'Oreo Goloso', presentation: '350ml', price: 7500, cost: 2600, brand: 'Dulce Toque', image: 'images/oreo.png' },
-      { id: uid(), name: 'Choco Torta Petit', presentation: '100ml', price: 3500, cost: 1200, brand: 'Dulce Toque', image: 'images/chocotorta.png' },
-      { id: uid(), name: 'Choco Torta Glotón', presentation: '250ml', price: 7500, cost: 2500, brand: 'Dulce Toque', image: 'images/chocotorta.png' },
-      { id: uid(), name: 'Choco Torta Goloso', presentation: '350ml', price: 9500, cost: 3300, brand: 'Dulce Toque', image: 'images/chocotorta.png' }
+      { id: uid(), name: 'Oreo Goloso', presentation: '350ml', price: 7500, cost: 2600, brand: 'Dulce Toque', image: 'images/oreo.png' }
     ],
     deliveries: []
   };
@@ -224,7 +224,7 @@
   }
 
   function renderBrandReport() {
-    const brands = ['Tomá Mate', 'Dulce Toque'];
+    const brands = ['Tomá Mate 🧉', 'Dulce Toque 🧁'];
     return `<div class="section-head"><div><h2>Cuentas por marca</h2><p>Costos y ganancia de lo vendido</p></div></div><div class="brand-grid">${brands.map((brand, index) => {
       const report = brandReport(brand);
       return `<article class="brand-report ${index ? 'dulce' : 'mate'}"><div class="brand-report-head"><strong>${brand}</strong><span>${money(report.collected)} cobrado</span></div><div class="report-row"><span>Venta bruta</span><strong>${money(report.gross)}</strong></div><div class="report-row"><span>Comisiones</span><strong>− ${money(report.commission)}</strong></div><div class="report-row"><span>Neto por recibir</span><strong>${money(report.received)}</strong></div><div class="report-row"><span>Costos</span><strong>− ${money(report.costs)}</strong></div><div class="report-profit"><span>Ganancia cobrada</span><strong>${money(report.profit)}</strong></div><div class="split-row"><span>Compras 50%<strong>${money(report.half)}</strong></span><span>Ahorro 50%<strong>${money(report.half)}</strong></span></div></article>`;
@@ -404,9 +404,99 @@
 
   function openDeliveryModal(id, justCreated = false) {
     const delivery = state.deliveries.find(item => item.id === id); if (!delivery) return;
+      if (justCreated) {
+        openModal(`
+          <div class="modal-head">
+            <div>
+              <h2>Entrega guardada</h2>
+              <span class="status entregado">Entregado</span>
+            </div>
+            <button class="close-modal" aria-label="Cerrar">×</button>
+          </div>
+          ${receiptHtml(delivery)}
+          <div class="button-row">
+            <button type="button" class="button green full" id="modal-whatsapp">Enviar comprobante por WhatsApp</button>
+          </div>
+          <div class="button-row">
+            <button type="button" class="button ghost full close-modal">Listo</button>
+          </div>
+        `);
+        $('#modal-whatsapp').addEventListener('click', () => sendWhatsApp(id));
+        setTimeout(() => toast('Entrega guardada. Ya podés enviar el comprobante.'), 150);
+        return;
+      }
     const status = statusOf(delivery); const due = Math.max(0, netSoldTotal(delivery) - paidTotal(delivery));
-    openModal(`<div class="modal-head"><div><h2>Detalle de entrega</h2><span class="status ${status.toLowerCase()}">${status}</span></div><button class="close-modal" aria-label="Cerrar">×</button></div>${receiptHtml(delivery)}<div class="section-head"><div><h2>Seguimiento</h2><p>Vendido, devuelto y pendiente</p></div></div><form id="tracking-form">${delivery.items.map((item, index) => `<div class="line-item tracking-item"><img class="line-thumb" src="${escapeHtml(item.image || guessImage(item.name))}" alt=""><div><div class="card-title">${escapeHtml(item.name)}</div><div class="muted small">${escapeHtml(item.brand || 'Tomá Mate')} · entregado: ${item.quantity}</div></div><div class="line-grid tracking-inputs"><div class="field"><label>Vendido</label><input name="sold-${index}" type="number" min="0" max="${item.quantity}" value="${item.sold || 0}"></div><div class="field"><label>Devuelto</label><input name="returned-${index}" type="number" min="0" max="${item.quantity}" value="${item.returned || 0}"></div></div></div>`).join('')}<button class="button dark full" type="submit">Guardar seguimiento</button></form><div class="settlement-box"><div class="report-row"><span>Venta bruta</span><strong>${money(soldTotal(delivery))}</strong></div><div class="report-row"><span>Comisión (${commissionRate(delivery)}%)</span><strong>− ${money(commissionTotal(delivery))}</strong></div><div class="report-profit"><span>Neto del emprendimiento</span><strong>${money(netSoldTotal(delivery))}</strong></div></div><div class="section-head"><div><h2>Pagos</h2><p>Por cobrar: ${money(due)}</p></div></div>${(delivery.payments || []).map(payment => `<div class="card-row card small"><span>${dateTime(payment.date)}</span><strong>${money(payment.amount)}</strong></div>`).join('') || '<p class="muted small">Todavía no registraste pagos.</p>'}<form id="payment-form" class="button-row"><div class="field" style="flex:1;margin:0"><input name="amount" type="number" min="100" step="10" placeholder="Importe" required></div><button class="button" type="submit">Registrar pago</button></form><div class="button-row"><button class="button green full" id="modal-whatsapp">Enviar comprobante por WhatsApp</button></div><div class="danger-zone"><button class="button danger full" id="delete-delivery">Eliminar entrega</button></div>`);
-
+    openModal(`
+      <div class="modal-head">
+        <div>
+          <h2>Seguimiento</h2>
+          <span class="status ${status.toLowerCase()}">${status}</span>
+        </div>
+        <button class="close-modal" aria-label="Cerrar">×</button>
+      </div>
+      <div class="section-head">
+        <div>
+          <h2>Seguimiento</h2>
+          <p>Vendido, devuelto y pendiente</p>
+        </div>
+      </div>
+      <form id="tracking-form">${delivery.items.map((item, index) => `
+        <div class="line-item tracking-item">
+          <img class="line-thumb" src="${escapeHtml(item.image || guessImage(item.name))}" alt="">
+          <div>
+            <div class="card-title">${escapeHtml(item.name)}</div>
+            <div class="muted small">${escapeHtml(item.brand || 'Tomá Mate')} · entregado: ${item.quantity}</div>
+          </div>
+          <div class="line-grid tracking-inputs">
+            <div class="field">
+              <label>Vendido</label>
+              <input name="sold-${index}" type="number" min="0" max="${item.quantity}" value="${item.sold || 0}">
+            </div>
+            <div class="field">
+              <label>Devuelto</label>
+              <input name="returned-${index}" type="number" min="0" max="${item.quantity}" value="${item.returned || 0}">
+            </div>
+          </div>
+        </div>`).join('')}
+        <button class="button dark full" type="submit">Guardar seguimiento</button>
+      </form>
+      <div class="settlement-box">
+        <div class="report-row">
+          <span>Venta bruta</span>
+          <strong>${money(soldTotal(delivery))}</strong>
+        </div>
+        <div class="report-row">
+          <span>Comisión (${commissionRate(delivery)}%)</span>
+          <strong>− ${money(commissionTotal(delivery))}</strong>
+        </div>
+        <div class="report-profit">
+          <span>Neto del emprendimiento</span>
+          <strong>${money(netSoldTotal(delivery))}</strong>
+        </div>
+      </div>
+      <div class="section-head">
+        <div>
+          <h2>Pagos</h2>
+          <p>Por cobrar: ${money(due)}</p>
+        </div>
+      </div>${(delivery.payments || []).map(payment => `
+      <div class="card-row card small">
+        <span>${dateTime(payment.date)}</span>
+        <strong>${money(payment.amount)}</strong>
+      </div>`).join('') || 
+      '<p class="muted small">Todavía no registraste pagos.</p>'}
+      <form id="payment-form" class="button-row">
+        <div class="field" style="flex:1;margin:0">
+          <input name="amount" type="number" min="100" step="10" placeholder="Importe" required>
+        </div>
+        <button class="button" type="submit">Registrar pago</button>
+      </form>
+      <div class="button-row">
+        <button class="button green full" id="modal-whatsapp">Enviar comprobante por WhatsApp</button>
+      </div>
+      <div class="danger-zone">
+        <button class="button danger full" id="delete-delivery">Eliminar entrega</button>
+      </div>`);
     $('#tracking-form').addEventListener('submit', event => {
       event.preventDefault(); const data = new FormData(event.target);
       const updates = delivery.items.map((item, index) => ({ sold: Math.max(0, Number(data.get(`sold-${index}`)) || 0), returned: Math.max(0, Number(data.get(`returned-${index}`)) || 0) }));
@@ -422,7 +512,6 @@
     });
     $('#modal-whatsapp').addEventListener('click', () => sendWhatsApp(id));
     $('#delete-delivery').addEventListener('click', () => { if (confirm('¿Eliminar esta entrega y todos sus movimientos?')) { state.deliveries = state.deliveries.filter(item => item.id !== id); saveState(); closeModal(); render(); toast('Entrega eliminada'); } });
-    if (justCreated) setTimeout(() => toast('Entrega guardada. Ya podés enviar el duplicado.'), 150);
   }
 
 function whatsappText(delivery) {
@@ -431,18 +520,37 @@ function whatsappText(delivery) {
   const tracked = paid > 0 || delivery.items.some(item => (item.sold || 0) > 0 || (item.returned || 0) > 0);
 
   if (!tracked) {
-    const lines = delivery.items.map(item => `• ${item.quantity} x ${item.name} (${item.presentation}) [${item.brand || 'Tomá Mate'}] — ${money(item.quantity * item.price)}`);
-    return [`*CONTROL DE CONSIGNACIONES*`, `*COMPROBANTE DE ENTREGA*`, ``, `Cliente: ${client?.name || ''}`, `Fecha: ${dateTime(delivery.date)}`, `Comisión acordada: ${commissionRate(delivery)}%`, ``, ...lines, ``, `*TOTAL EXHIBIDO: ${money(deliveryTotal(delivery))}*`, delivery.notes ? `Observaciones: ${delivery.notes}` : '', ``, `Este mensaje funciona como duplicado de la mercadería entregada en consignación.`].filter(line => line !== '').join('\n');
+    const lines = delivery.items.map(item => {
+      const presentation = item.presentation ? ` (${item.presentation})` : '';
+      return `• ${item.quantity} x ${item.name}${presentation} — ${money(item.quantity * item.price)}`;
+    });
+    const deliveredUnits = delivery.items.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
+
+    return [
+      `*CONTROL DE CONSIGNACIONES*`,
+      `*COMPROBANTE DE ENTREGA*`,
+      ``,
+      `Cliente: ${client?.name || ''}`,
+      `Fecha: ${dateTime(delivery.date)}`,
+      `Comisión acordada: ${commissionRate(delivery)}%`,
+      ``,
+      ...lines,
+      `*TOTAL ENTREGADO: ${deliveredUnits} Producto${deliveredUnits === 1 ? '' : 's'}*`,
+      delivery.notes ? `Observaciones: ${delivery.notes}` : null,
+      ``,
+      `*(Este mensaje funciona como duplicado de la mercadería entregada en consignación.)*`
+    ].filter(line => line !== null).join('\n');
   }
 
   const lines = delivery.items.flatMap(item => {
     const sold = Number(item.sold) || 0;
     const returned = Number(item.returned) || 0;
     const pending = Math.max(0, item.quantity - sold - returned);
-    return [
-      `• *${item.name}* (${item.presentation}) [${item.brand || 'Tomá Mate'}]`,
-      `  Entregado: ${item.quantity} · Vendido: ${sold} (${money(sold * item.price)}) · Devuelto: ${returned} · Pendiente: ${pending}`
-    ];
+    const details = [`    Entregado: ${item.quantity}.`];
+    if (sold > 0) details.push(`    Vendido: ${sold} x (${money(item.price)})`);
+    if (returned > 0) details.push(`    Devuelto: ${returned}.`);
+    if (pending > 0) details.push(`    Pendiente: ${pending}.`);
+    return [`• *${item.name}*`, ...details];
   });
 
   const gross = soldTotal(delivery);
@@ -467,8 +575,11 @@ function whatsappText(delivery) {
     `Pagado: ${money(paid)}`,
     `*SALDO PENDIENTE: ${money(due)}*`,
     ``,
-    pendingUnits(delivery) > 0 ? `Mercadería que continúa en el negocio: ${pendingUnits(delivery)} unidad${pendingUnits(delivery) === 1 ? '' : 'es'}.` : `No queda mercadería pendiente en el negocio.`,
-    `Este mensaje funciona como actualización del comprobante de consignación.`
+    pendingUnits(delivery) > 0
+      ? `Mercadería que continúa en el negocio: ${pendingUnits(delivery)} unidad${pendingUnits(delivery) === 1 ? '' : 'es'}.`
+      : `No queda mercadería pendiente en el negocio.`,
+    ``,
+    `*(Este mensaje funciona como actualización del comprobante de consignación.)*`
   ].join('\n');
 }
 
@@ -503,7 +614,7 @@ function whatsappText(delivery) {
   $$('.nav-item').forEach(button => button.addEventListener('click', () => navigate(button.dataset.route)));
   $('#backup-button').addEventListener('click', openBackupModal);
   $('#import-file').addEventListener('change', event => { const [file] = event.target.files; if (file) importBackup(file); event.target.value = ''; });
-  $('#modal').addEventListener('click', event => { if (event.target === $('#modal')) closeModal(); });
+  $('#modal').addEventListener('cancel', event => event.preventDefault());
   if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./js/sw.js').catch(console.warn));
   render();
 })();

@@ -5,10 +5,12 @@
   --card: #ffffff;
   --line: #dce1e9;
   --yellow: #ffd51f;
+  --mate: #3a5330;
   --yellow-dark: #d9aa00;
   --green: #159447;
   --green-dark: #087031;
-  --red: #e22c35;
+  --red: #b61a1a;
+  --pink: #e75dd0;
   --blue: #1746a2;
   --blue-light: #e8effd;
   --shadow: 0 10px 30px rgba(35, 56, 94, .09);
@@ -23,7 +25,7 @@ button { cursor: pointer; }
 .topbar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; padding: max(12px, env(safe-area-inset-top)) 18px 10px; background: rgba(255,255,255,.94); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
 .brand-lockup { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .app-logo { width: 50px; height: 50px; object-fit: contain; border-radius: 14px; border: 1px solid var(--line); background: #fff; }
-.eyebrow { margin: 0 0 2px; font-size: .64rem; font-weight: 900; letter-spacing: .11em; color: var(--red); }
+.eyebrow { margin: 0 0 2px; font-size: .64rem; font-weight: 900; letter-spacing: .11em; color: var(--blue); }
 h1 { margin: 0; font-size: 1.45rem; line-height: 1.15; }
 h2 { margin: 0; font-size: 1.2rem; }
 h3 { margin: 0; font-size: 1rem; }
@@ -47,7 +49,7 @@ p { line-height: 1.45; }
 .small { font-size: .84rem; }
 .amount { font-weight: 900; white-space: nowrap; }
 .button { min-height: 46px; padding: 11px 16px; border: 0; border-radius: 14px; font-weight: 800; background: var(--yellow); color: var(--ink); }
-a.button { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.button { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
 .button:active { transform: translateY(1px); }
 .button.dark { background: var(--blue); color: #fff; }
 .button.green { background: var(--green); color: #fff; }
@@ -116,11 +118,11 @@ a.button { display: inline-flex; align-items: center; justify-content: center; t
 .brand-tag.dulce { background: #ffe1e3; color: #9c1922; }
 .brand-grid { display: grid; gap: 10px; }
 .brand-report { position: relative; overflow: hidden; border-radius: 20px; padding: 16px; background: #fff; border: 1px solid var(--line); box-shadow: 0 5px 18px rgba(35,56,94,.05); }
-.brand-report::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 5px; background: var(--yellow); }
-.brand-report.dulce::before { background: var(--red); }
+.brand-report::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 5px; background: var(--mate); }
+.brand-report.dulce::before { background: var(--pink); }
 .brand-report-head, .report-row, .report-profit { display: flex; justify-content: space-between; gap: 12px; }
-.brand-report-head { padding-bottom: 9px; margin-bottom: 8px; border-bottom: 1px solid var(--line); color: var(--blue); }
-.brand-report.dulce .brand-report-head { color: var(--red); }
+.brand-report-head { padding-bottom: 9px; margin-bottom: 8px; border-bottom: 1px solid var(--line); color: var(--mate); }
+.brand-report.dulce .brand-report-head { color: var(--pink); }
 .report-row { padding: 4px 0; color: var(--muted); font-size: .85rem; }
 .report-profit { padding: 9px 0; margin-top: 5px; border-top: 1px solid var(--line); }
 .split-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }

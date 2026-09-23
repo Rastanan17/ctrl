@@ -445,7 +445,7 @@
           <img class="line-thumb" src="${escapeHtml(item.image || guessImage(item.name))}" alt="">
           <div>
             <div class="card-title">${escapeHtml(item.name)}</div>
-            <div class="muted small">${escapeHtml(item.brand || 'Tomá Mate')} · entregado: ${item.quantity}</div>
+            <div class="muted small">Entregado: ${item.quantity} ·Vendido: ${item.sold || 0} ·Devuelto: ${item.returned || 0} ·Pendiente: ${Math.max(0, item.quantity - (item.sold || 0) - (item.returned || 0))}</div>
           </div>
           <div class="line-grid tracking-inputs">
             <div class="field">

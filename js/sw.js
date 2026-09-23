@@ -1,4 +1,4 @@
-const CACHE = 'consignaciones-v8';
+const CACHE = 'consignaciones-v9';
 const ASSETS = [
   './', './index.html', './css/styles.css', './js/app.js', './manifest.webmanifest',
   './images/ctrl.png', './images/ctrl-icon.png', './images/bizcochitos.png', './images/brownie.png',

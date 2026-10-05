@@ -199,51 +199,190 @@
     `;
   }
 
-  function deliveryCard(delivery, selectedBrand = '') {
-    const client = clientById(delivery.clientId);
-    const status = statusOf(delivery);
-    const sold = netSoldTotal(delivery);
-    const paid = paidTotal(delivery);
-    const percent = sold ? Math.min(100, Math.round((paid / sold) * 100)) : 0;
-    return `<article class="card">
+function deliveryCard(delivery, selectedBrand = '') {
+  const client = clientById(delivery.clientId);
+  const status = statusOf(delivery);
+  const sold = netSoldTotal(delivery);
+  const paid = paidTotal(delivery);
+  const percent = sold ? Math.min(100, Math.round((paid / sold) * 100)) : 0;
+
+  // Rendición por marca de esta venta
+  const brands = ['Tomá Mate', 'Dulce Toque'];
+
+  const brandDetails = brands.map(brand => {
+    let gross = 0;
+
+    delivery.items.forEach(item => {
+      if ((item.brand || 'Tomá Mate') !== brand) return;
+
+      const soldUnits = item.sold || 0;
+      gross += soldUnits * item.price;
+    });
+
+    if (gross <= 0) return '';
+
+    const rate = commissionRate(delivery);
+    const commission = gross * rate / 100;
+    const net = gross - commission;
+
+    return `
+      <div class="small" style="margin-top:8px;">
+        <strong>${brand === 'Dulce Toque' ? '🧁' : '🧉'} ${escapeHtml(brand)}</strong>
+        <div>Venta: ${money(gross)}</div>
+        <div>Comisión: −${money(commission)}</div>
+        <div><strong>Corresponde: ${money(net)}</strong></div>
+      </div>
+    `;
+  }).join('');
+
+  return `<article class="card">
       <div class="card-row">
         <div><div class="card-title">${escapeHtml(client?.name || 'Cliente eliminado')}</div><div class="muted small">${dateTime(delivery.date)} · ${delivery.items.length} producto${delivery.items.length === 1 ? '' : 's'}</div></div>
         <span class="status ${status.toLowerCase()}">${status}</span>
       </div>
-      <div class="progress"><span style="width:${percent}%"></span></div>
-      <div class="brand-tags">${[...new Set(delivery.items.map(item => item.brand || 'Tomá Mate'))].map(brand => `<span class="brand-tag ${brand === 'Dulce Toque' ? 'dulce' : 'mate'}">${escapeHtml(brand)}</span>`).join('')}</div>
-      <div class="card-row small"><span>${pendingUnits(delivery)} unidades pendientes · comisión ${commissionRate(delivery)}%</span><strong>${money(Math.max(0, sold - paid))} por cobrar</strong></div>
-      <div class="button-row"><button class="button ghost small-button" data-view-delivery="${delivery.id}">Ver detalle</button><button class="button green small-button" data-whatsapp="${delivery.id}">WhatsApp</button></div>
-    </article>`;
-  }
 
-  function brandReport(brand) {
+      <div class="progress"><span style="width:${percent}%"></span></div>
+
+      <div class="brand-tags">${[...new Set(delivery.items.map(item => item.brand || 'Tomá Mate'))].map(brand => `<span class="brand-tag ${brand === 'Dulce Toque' ? 'dulce' : 'mate'}">${escapeHtml(brand)}</span>`).join('')}</div>
+
+      <div class="card-row small">
+        <span>${pendingUnits(delivery)} unidades pendientes · comisión ${commissionRate(delivery)}%</span>
+        <strong>${money(Math.max(0, sold - paid))} por cobrar</strong>
+      </div>
+
+      <div class="history-settlement" style="display:none;">
+        <div class="small" style="margin-top:12px;">
+          <strong>Rendición de esta venta</strong>
+        </div>
+
+        ${brandDetails}
+
+        <div class="small" style="margin-top:10px; padding-top:8px; border-top:1px solid var(--border);">
+          <strong>Total cobrado: ${money(paid)}</strong>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button class="button ghost small-button" data-view-delivery="${delivery.id}">Ver detalle</button>
+        <button class="button green small-button" data-whatsapp="${delivery.id}">WhatsApp</button>
+      </div>
+    </article>`;
+}
+
+function brandReport(brand) {
     let gross = 0, commission = 0, costs = 0, collected = 0;
+    let commissionBase = 0;
+
     state.deliveries.forEach(delivery => {
       let deliveryBrandNet = 0;
+
       delivery.items.forEach(item => {
         if ((item.brand || 'Tomá Mate') !== brand) return;
+
         const itemGross = (item.sold || 0) * item.price;
-        const itemCommission = itemGross * commissionRate(delivery) / 100;
+        const rate = commissionRate(delivery);
+        const itemCommission = itemGross * rate / 100;
+
         gross += itemGross;
         commission += itemCommission;
+        commissionBase += itemGross;
+
         deliveryBrandNet += itemGross - itemCommission;
+
         costs += (item.sold || 0) * (Number(item.cost) || 0);
       });
+
       const deliveryNet = netSoldTotal(delivery);
-      if (deliveryNet > 0) collected += paidTotal(delivery) * (deliveryBrandNet / deliveryNet);
+
+      if (deliveryNet > 0) {
+        collected += paidTotal(delivery) * (deliveryBrandNet / deliveryNet);
+      }
     });
+
     const received = gross - commission;
     const profit = Math.max(0, collected - costs);
-    return { gross, commission, received, collected, costs, profit, half: profit / 2 };
+    const commissionPercent = commissionBase > 0
+      ? (commission / commissionBase) * 100
+      : 0;
+
+    return {
+      gross,
+      commission,
+      commissionPercent,
+      received,
+      collected,
+      costs,
+      profit,
+      half: profit / 2
+    };
   }
 
   function renderBrandReport() {
-    const brands = ['Tomá Mate 🧉', 'Dulce Toque 🧁'];
-    return `<div class="section-head"><div><h2>Cuentas por marca</h2><p>Costos y ganancia de lo vendido</p></div></div><div class="brand-grid">${brands.map((brand, index) => {
-      const report = brandReport(brand);
-      return `<article class="brand-report ${index ? 'dulce' : 'mate'}"><div class="brand-report-head"><strong>${brand}</strong><span>${money(report.collected)} cobrado</span></div><div class="report-row"><span>Venta bruta</span><strong>${money(report.gross)}</strong></div><div class="report-row"><span>Comisiones</span><strong>− ${money(report.commission)}</strong></div><div class="report-row"><span>Neto por recibir</span><strong>${money(report.received)}</strong></div><div class="report-row"><span>Costos</span><strong>− ${money(report.costs)}</strong></div><div class="report-profit"><span>Ganancia cobrada</span><strong>${money(report.profit)}</strong></div><div class="split-row"><span>Compras 50%<strong>${money(report.half)}</strong></span><span>Ahorro 50%<strong>${money(report.half)}</strong></span></div></article>`;
-    }).join('')}</div>`;
+    const brands = [
+      { name: 'Tomá Mate', label: 'Tomá Mate 🧉', className: 'mate' },
+      { name: 'Dulce Toque', label: 'Dulce Toque 🧁', className: 'dulce' }
+    ];
+
+    return `
+      <div class="section-head">
+        <div>
+          <h2>Cuentas por marca</h2>
+          <p>Costos y ganancia de lo vendido</p>
+        </div>
+      </div>
+
+      <div class="brand-grid">
+        ${brands.map(brand => {
+          const report = brandReport(brand.name);
+
+          return `
+            <article class="brand-report ${brand.className}">
+              <div class="brand-report-head">
+                <strong>${brand.label}</strong>
+                <span>${money(report.collected)} cobrado</span>
+              </div>
+
+              <div class="report-row">
+                <span>Venta bruta</span>
+                <strong>${money(report.gross)}</strong>
+              </div>
+
+              <div class="report-row">
+                <span>Comisiones (${report.commissionPercent.toFixed(1)}%)</span>
+                <strong>− ${money(report.commission)}</strong>
+              </div>
+
+              <div class="report-row">
+                <span>Neto por recibir</span>
+                <strong>${money(report.received)}</strong>
+              </div>
+
+              <div class="report-row">
+                <span>Costos</span>
+                <strong>− ${money(report.costs)}</strong>
+              </div>
+
+              <div class="report-profit">
+                <span>Ganancia cobrada</span>
+                <strong>${money(report.profit)}</strong>
+              </div>
+
+              <div class="split-row">
+                <span>
+                  Compras 50%
+                  <strong>${money(report.half)}</strong>
+                </span>
+
+                <span>
+                  Ahorro 50%
+                  <strong>${money(report.half)}</strong>
+                </span>
+              </div>
+            </article>
+          `;
+        }).join('')}
+      </div>
+    `;
   }
 
   function emptyState(icon, title, text) {
@@ -336,9 +475,52 @@
   }
 
   function addDraftLine() {
-    const product = state.products[0];
-    deliveryDraft.items.push({ productId: product.id, name: product.name, presentation: product.presentation, price: product.price, cost: product.cost || 0, brand: product.brand || 'Tomá Mate', image: product.image || guessImage(product.name), quantity: 1 });
-    render();
+    openModal(`
+      <div class="modal-head">
+        <div>
+          <h2>Elegí el producto</h2>
+          <p class="muted small">Seleccioná qué producto querés agregar a la entrega.</p>
+        </div>
+        <button class="close-modal" aria-label="Cerrar">×</button>
+      </div>
+
+      <div class="button-row" style="display:grid;gap:10px">
+        ${state.products.map(product => `
+          <button
+            type="button"
+            class="button ghost"
+            data-select-product="${product.id}"
+            style="text-align:left"
+          >
+            ${escapeHtml(product.name)}
+            <span class="muted small">
+              · ${escapeHtml(product.presentation)} · ${money(product.price)}
+            </span>
+          </button>
+        `).join('')}
+      </div>
+    `);
+
+    $$('[data-select-product]').forEach(button => {
+      button.addEventListener('click', () => {
+        const product = productById(button.dataset.selectProduct);
+        if (!product) return;
+
+        deliveryDraft.items.push({
+          productId: product.id,
+          name: product.name,
+          presentation: product.presentation,
+          price: product.price,
+          cost: product.cost || 0,
+          brand: product.brand || 'Tomá Mate',
+          image: product.image || guessImage(product.name),
+          quantity: 1
+        });
+
+        closeModal();
+        render();
+      });
+    });
   }
 
   function bindLine(element) {
@@ -350,7 +532,20 @@
     });
     $('.line-price', element).addEventListener('input', event => { deliveryDraft.items[index].price = Math.max(0, Number(event.target.value) || 0); updateDraftTotals(); });
     $('.line-quantity', element).addEventListener('input', event => { deliveryDraft.items[index].quantity = Math.max(1, Number(event.target.value) || 1); updateDraftTotals(); });
-    $('.line-remove', element).addEventListener('click', () => { deliveryDraft.items.splice(index, 1); render(); });
+    $('.line-remove', element).addEventListener('click', () => {
+      const item = deliveryDraft.items[index];
+
+      if (!item) return;
+
+      const confirmed = confirm(
+        `¿Eliminar "${item.name}" de esta entrega?`
+      );
+
+      if (!confirmed) return;
+
+      deliveryDraft.items.splice(index, 1);
+      render();
+    });
   }
 
   function updateDraftTotals() {
@@ -501,23 +696,27 @@
         <button class="button dark full" type="submit">Guardar seguimiento</button>
       </form>
       <div class="settlement-box">
+
         <div class="report-row">
           <span>Venta bruta</span>
-          <strong>${money(soldTotal(delivery))}</strong>
+          <strong id="tracking-gross">${money(soldTotal(delivery))}</strong>
         </div>
+
         <div class="report-row">
           <span>Comisión (${commissionRate(delivery)}%)</span>
-          <strong>− ${money(commissionTotal(delivery))}</strong>
+          <strong id="tracking-commission">− ${money(commissionTotal(delivery))}</strong>
         </div>
+
         <div class="report-profit">
           <span>Neto del emprendimiento</span>
-          <strong>${money(netSoldTotal(delivery))}</strong>
+          <strong id="tracking-net">${money(netSoldTotal(delivery))}</strong>
         </div>
+
       </div>
       <div class="section-head">
         <div>
           <h2>Pagos</h2>
-          <p>Por cobrar: ${money(due)}</p>
+          <p>Por cobrar: <strong id="tracking-due">${money(due)}</strong></p>
         </div>
       </div>${(delivery.payments || []).map(payment => `
       <div class="card-row card small">
@@ -527,7 +726,7 @@
       '<p class="muted small">Todavía no registraste pagos.</p>'}
       <form id="payment-form" class="button-row">
         <div class="field" style="flex:1;margin:0">
-          <input name="amount" type="number" min="100" step="10" placeholder="Importe" required>
+          <input name="amount" type="number" min="5" step="5" placeholder="Importe" required>
         </div>
         <button class="button" type="submit">Registrar pago</button>
       </form>
@@ -537,6 +736,38 @@
       <div class="danger-zone">
         <button class="button danger full" id="delete-delivery">Eliminar entrega</button>
       </div>`);
+          const updateTrackingPreview = () => {
+            const form = $('#tracking-form');
+            if (!form) return;
+
+            const data = new FormData(form);
+
+            let gross = 0;
+
+            delivery.items.forEach((item, index) => {
+              const sold = Math.max(
+                0,
+                Number(data.get(`sold-${index}`)) || 0
+              );
+
+              gross += sold * item.price;
+            });
+
+            const rate = commissionRate(delivery);
+            const commission = gross * rate / 100;
+            const net = gross - commission;
+            const paid = paidTotal(delivery);
+            const currentDue = Math.max(0, net - paid);
+
+            $('#tracking-gross').textContent = money(gross);
+            $('#tracking-commission').textContent = `− ${money(commission)}`;
+            $('#tracking-net').textContent = money(net);
+            $('#tracking-due').textContent = money(currentDue);
+          };
+
+          $('#tracking-form').addEventListener('input', updateTrackingPreview);
+
+          updateTrackingPreview();
     $('#tracking-form').addEventListener('submit', event => {
       event.preventDefault(); const data = new FormData(event.target);
       const updates = delivery.items.map((item, index) => ({ sold: Math.max(0, Number(data.get(`sold-${index}`)) || 0), returned: Math.max(0, Number(data.get(`returned-${index}`)) || 0) }));

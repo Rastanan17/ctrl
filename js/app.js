@@ -206,67 +206,189 @@ function deliveryCard(delivery, selectedBrand = '') {
   const paid = paidTotal(delivery);
   const percent = sold ? Math.min(100, Math.round((paid / sold) * 100)) : 0;
 
-  // Rendición por marca de esta venta
+  const rate = commissionRate(delivery);
+  const totalNet = netSoldTotal(delivery);
+
   const brands = ['Tomá Mate', 'Dulce Toque'];
 
-  const brandDetails = brands.map(brand => {
+  const settlement = brands.map(brand => {
     let gross = 0;
 
     delivery.items.forEach(item => {
       if ((item.brand || 'Tomá Mate') !== brand) return;
 
-      const soldUnits = item.sold || 0;
-      gross += soldUnits * item.price;
+      gross += (item.sold || 0) * item.price;
     });
 
-    if (gross <= 0) return '';
+    if (gross <= 0) return null;
 
-    const rate = commissionRate(delivery);
     const commission = gross * rate / 100;
     const net = gross - commission;
 
-    return `
-      <div class="small" style="margin-top:8px;">
-        <strong>${brand === 'Dulce Toque' ? '🧁' : '🧉'} ${escapeHtml(brand)}</strong>
-        <div>Venta: ${money(gross)}</div>
-        <div>Comisión: −${money(commission)}</div>
-        <div><strong>Corresponde: ${money(net)}</strong></div>
-      </div>
-    `;
-  }).join('');
+    const collected = totalNet > 0
+      ? paid * (net / totalNet)
+      : 0;
 
-  return `<article class="card">
+    const pending = Math.max(0, net - collected);
+
+    return {
+      brand,
+      gross,
+      commission,
+      net,
+      collected,
+      pending
+    };
+  }).filter(Boolean);
+
+  const settlementTotal = settlement.reduce((sum, item) => sum + item.collected, 0);
+
+  return `
+    <article class="card">
+
       <div class="card-row">
-        <div><div class="card-title">${escapeHtml(client?.name || 'Cliente eliminado')}</div><div class="muted small">${dateTime(delivery.date)} · ${delivery.items.length} producto${delivery.items.length === 1 ? '' : 's'}</div></div>
-        <span class="status ${status.toLowerCase()}">${status}</span>
+        <div>
+          <div class="card-title">
+            ${escapeHtml(client?.name || 'Cliente eliminado')}
+          </div>
+
+          <div class="muted small">
+            ${dateTime(delivery.date)} ·
+            ${delivery.items.length}
+            producto${delivery.items.length === 1 ? '' : 's'}
+          </div>
+        </div>
+
+        <span class="status ${status.toLowerCase()}">
+          ${status}
+        </span>
       </div>
 
-      <div class="progress"><span style="width:${percent}%"></span></div>
+      <div class="progress">
+        <span style="width:${percent}%"></span>
+      </div>
 
-      <div class="brand-tags">${[...new Set(delivery.items.map(item => item.brand || 'Tomá Mate'))].map(brand => `<span class="brand-tag ${brand === 'Dulce Toque' ? 'dulce' : 'mate'}">${escapeHtml(brand)}</span>`).join('')}</div>
+      <div class="brand-tags">
+        ${[
+          ...new Set(
+            delivery.items.map(item => item.brand || 'Tomá Mate')
+          )
+        ].map(brand => `
+          <span class="brand-tag ${brand === 'Dulce Toque' ? 'dulce' : 'mate'}">
+            ${escapeHtml(brand)}
+          </span>
+        `).join('')}
+      </div>
 
       <div class="card-row small">
-        <span>${pendingUnits(delivery)} unidades pendientes · comisión ${commissionRate(delivery)}%</span>
-        <strong>${money(Math.max(0, sold - paid))} por cobrar</strong>
+        <span>
+          ${pendingUnits(delivery)} unidades pendientes ·
+          comisión ${rate}%
+        </span>
+
+        <strong>
+          ${money(Math.max(0, sold - paid))} por cobrar
+        </strong>
       </div>
 
-      <div class="history-settlement" style="display:none;">
-        <div class="small" style="margin-top:12px;">
-          <strong>Rendición de esta venta</strong>
-        </div>
+      <details class="settlement-box">
+        <summary>
+          <span>Rendición de esta venta</span>
+          <span class="muted small">Desglosar ▾</span>
+        </summary>
 
-        ${brandDetails}
+        <div class="settlement-content">
 
-        <div class="small" style="margin-top:10px; padding-top:8px; border-top:1px solid var(--border);">
-          <strong>Total cobrado: ${money(paid)}</strong>
+          <div class="section-head">
+            <div>
+              <p>Cuánto corresponde a cada emprendimiento</p>
+            </div>
+          </div>
+
+          ${settlement.length ? settlement.map(item => {
+            const half = item.net / 2;
+
+            return `
+              <div class="settlement-brand">
+
+                <div class="card-row">
+                  <strong>
+                    ${item.brand === 'Dulce Toque'
+                      ? 'Dulce Toque 🧁'
+                      : 'Tomá Mate 🧉'}
+                  </strong>
+
+                  <strong>${money(item.collected)}</strong>
+                </div>
+
+                <div class="report-row">
+                  <span>Venta</span>
+                  <strong>${money(item.gross)}</strong>
+                </div>
+
+                <div class="report-row">
+                  <span>Comisión (${rate}%)</span>
+                  <strong>− ${money(item.commission)}</strong>
+                </div>
+
+                <div class="report-profit">
+                  <span>Neto</span>
+                  <strong>${money(item.net)}</strong>
+                </div>
+
+                <div class="split-row">
+
+                  <span>
+                    Compras 50%
+                    <strong>${money(half)}</strong>
+                  </span>
+
+                  <span>
+                    Ahorro 50%
+                    <strong>${money(half)}</strong>
+                  </span>
+
+                </div>
+
+                <div class="muted small">
+                  Cobrado: ${money(item.collected)}
+                  ${item.pending > 0
+                    ? ` · Pendiente: ${money(item.pending)}`
+                    : ''}
+                </div>
+
+              </div>
+            `;
+          }).join('') : `
+            <div class="muted small">
+              Todavía no hay productos vendidos en esta entrega.
+            </div>
+          `}
+
+          <div class="report-profit">
+            <span>Total cobrado de esta venta</span>
+            <strong>${money(settlementTotal)}</strong>
+          </div>
+
         </div>
-      </div>
+      </details>
 
       <div class="button-row">
-        <button class="button ghost small-button" data-view-delivery="${delivery.id}">Ver detalle</button>
-        <button class="button green small-button" data-whatsapp="${delivery.id}">WhatsApp</button>
+        <button
+          class="button ghost small-button"
+          data-view-delivery="${delivery.id}">
+          Ver detalle
+        </button>
+
+        <button
+          class="button green small-button"
+          data-whatsapp="${delivery.id}">
+          WhatsApp
+        </button>
       </div>
-    </article>`;
+
+    </article>
+  `;
 }
 
 function brandReport(brand) {

@@ -95,7 +95,22 @@
   }
 
   function saveState() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    try {
+      const serialized = JSON.stringify(state);
+      localStorage.setItem(STORAGE_KEY, serialized);
+
+      const verification = localStorage.getItem(STORAGE_KEY);
+
+      if (verification !== serialized) {
+        throw new Error('La verificación del guardado no coincide.');
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error al guardar el estado:', error);
+      toast('No se pudo guardar. Los datos cargados siguen en pantalla.');
+      return false;
+    }
   }
 
   function localDateTimeValue(date = new Date()) {
@@ -345,15 +360,40 @@
 
   function saveDelivery(event) {
     event.preventDefault();
-    if (!deliveryDraft.items.length) return toast('Agregá al menos un producto');
+
+    if (!deliveryDraft.items.length) {
+      return toast('Agregá al menos un producto');
+    }
+
     const delivery = {
-      id: uid(), clientId: deliveryDraft.clientId, date: new Date(deliveryDraft.date).toISOString(), notes: deliveryDraft.notes.trim(), createdAt: new Date().toISOString(),
+      id: uid(),
+      clientId: deliveryDraft.clientId,
+      date: new Date(deliveryDraft.date).toISOString(),
+      notes: deliveryDraft.notes.trim(),
+      createdAt: new Date().toISOString(),
       commission: Number(clientById(deliveryDraft.clientId)?.commission) || 0,
-      items: deliveryDraft.items.map(item => ({ ...item, sold: 0, returned: 0 })), payments: []
+      items: deliveryDraft.items.map(item => ({
+        ...item,
+        sold: 0,
+        returned: 0
+      })),
+      payments: []
     };
+
     state.deliveries.push(delivery);
-    saveState();
-    deliveryDraft = { clientId: deliveryDraft.clientId, date: localDateTimeValue(), notes: '', items: [] };
+
+    if (!saveState()) {
+      state.deliveries.pop();
+      return;
+    }
+
+    deliveryDraft = {
+      clientId: deliveryDraft.clientId,
+      date: localDateTimeValue(),
+      notes: '',
+      items: []
+    };
+
     render();
     toast('Entrega guardada');
     openDeliveryModal(delivery.id, true);
